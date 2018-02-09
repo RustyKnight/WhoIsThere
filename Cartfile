@@ -1,0 +1,5 @@
+
+git "http://shane.whitehead@stash:7990/scm/ioslib/beamusernotificationkit.git" "8ad9a7caf1b556d26a20714bd2297220f1203817"
+
+github "RustyKnight/CocoaLumberjack" "Xcode9.2-9C40b"
+github "RustyKnight/LogWrapperKit" "master"
