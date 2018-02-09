@@ -40,7 +40,7 @@ class ChatServiceManager: NSObject {
 	
 	func start() {
 		log(debug: "")
-//		BTService.shared.scanPeripheralServices = [Constants.SERVICE_UUID]
+		BTService.shared.scanPeripheralServices = [Constants.SERVICE_UUID]
 		BTService.shared.scanPeripheralOptions = [CBCentralManagerScanOptionAllowDuplicatesKey : true]
 		
 		BTService.shared.startCentralManager()
@@ -190,6 +190,11 @@ extension ChatServiceManager: CBPeripheralDelegate {
 		guard var characteristics = service.characteristics else {
 			return
 		}
+		
+		for char in characteristics {
+			log(debug: "\(char)")
+		}
+		
 		characteristics = characteristics.filter { $0.uuid.isEqual(Constants.RX_UUID) }
 		guard characteristics.count > 0 else {
 			// Do we really care??
@@ -199,12 +204,11 @@ extension ChatServiceManager: CBPeripheralDelegate {
 		let device = entry.0
 		let data = entry.1
 		
-		
-		
 		log(debug: "Write: [\(String(data: data, encoding: .utf8) ?? "?")] to \(peripheral.identifier)")
 		
 		for characteristic in characteristics {
 			peripheral.writeValue(data, for: characteristic, type: CBCharacteristicWriteType.withResponse)
+			peripheral.setNotifyValue(true, for: characteristic)
 		}
 		removeFirstMessage(for: peripheral)
 		let userInfo: [String: Any] = [
